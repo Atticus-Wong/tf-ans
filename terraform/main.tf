@@ -50,11 +50,14 @@ resource "proxmox_virtual_environment_vm" "vms" {
       }
     }
     
-    user_account {
-      username = "user" 
-      password = "password"
-      keys     = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvScgr6BsWdu3o9XYX6h8FXf5pkeyqeHQuytFzdXUCg atticuswong@email.com"]
-    }
+  user_account {
+        username = "user" 
+        password = "password"
+        keys     = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvScgr6BsWdu3o9XYX6h8FXf5pkeyqeHQuytFzdXUCg atticuswong@email.com",
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0kqlHuLYDJIw/T3zi/lw7zcZsX1h2M1CfQ14UBcP7y home-atti-automation@gmail.com"
+        ]
+      }
   }
 }
 

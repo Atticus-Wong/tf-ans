@@ -19,7 +19,7 @@ pipeline {
                 }
             }
         }
-				stage('Ansible Config') {
+				stage('Ansible') {
 						environment {
 								ANSIBLE_HOST_KEY_CHECKING = 'False'
 						}
