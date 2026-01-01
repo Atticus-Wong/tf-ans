@@ -11,7 +11,7 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    sh "terraform apply -auto-approve -var='proxmox_api_token=${PVE_TOKEN}'"
+                    sh "terraform apply -auto-approve -var='proxmox_api_token=${TF_VAR_proxmox_api_token}'"
                     // Save the IP to an environment variable
                     script {
                         env.TARGET_IP = sh(script: "terraform output -raw vm_ip", returnStdout: true).trim()
