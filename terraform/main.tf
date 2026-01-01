@@ -34,9 +34,11 @@ resource "proxmox_virtual_environment_vm" "vms" {
 
   agent {
     enabled = true
+    # Add this line to stop the infinite wait for an IP
+    # if the guest agent isn't responding immediately
+    timeout = "2m" 
   }
 
-  # This block is valid for VMs but not containers
   network_device {
     bridge = "vmbr0"
   }
@@ -48,7 +50,6 @@ resource "proxmox_virtual_environment_vm" "vms" {
       }
     }
     
-    # This sub-block is specific to the VM resource
     user_account {
       username = "user" 
       password = "password"
@@ -58,6 +59,6 @@ resource "proxmox_virtual_environment_vm" "vms" {
 }
 
 output "vm_ip" {
-  # Adjust this path based on your provider version (BPG/Telmate)
+  # [1] targets the first interface (eth0), [0] targets the first IPv4 address
   value = proxmox_virtual_environment_vm.vms.ipv4_addresses[1][0]
 }
