@@ -19,23 +19,20 @@ pipeline {
                 }
             }
         }
-				stage('Ansible') {
+				stage('Ansible Config') {
 						environment {
 								ANSIBLE_HOST_KEY_CHECKING = 'False'
 						}
 						steps {
-								echo "Configuring VM at ${env.TARGET_IP} using SSH Agent"
-								
-								// Use the ID you created in Step 1
-								sshagent(['AUTOMATION_SSH_KEY']) {
-										ansiblePlaybook(
-												playbook: 'ansible/configure.yml',
-												inventory: "${env.TARGET_IP},",
-												extraVars: [ 
-														ts_key: 'TS_KEY', 
-														ansible_user: 'user' 
-												]
-										)
+								// 'my-ssh-key' is the ID of the 'SSH User Private Key' credential
+								withCredentials([sshUserPrivateKey(credentialsId: 'AUTOMATION_SSH_KEY', keyFileVariable: 'SSH_KEY')]) {
+										sh """
+											 ansible-playbook ansible/configure.yml \
+											 -i ${env.TARGET_IP}, \
+											 --private-key=\$SSH_KEY \
+											 -u user \
+											 -e "ts_key=${TS_KEY}"
+										"""
 								}
 						}
 				}
