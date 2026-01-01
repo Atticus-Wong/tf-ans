@@ -3,6 +3,7 @@ pipeline {
     environment {
         // IDs match what you added in Manage Jenkins > Credentials
 				TF_VAR_proxmox_api_token = credentials('PVE_CONCAT')
+				PVE_TOKEN = credentials('PVE_CONCAT')
         TS_KEY    = credentials('TS_AUTHKEY')
     }
     stages {
