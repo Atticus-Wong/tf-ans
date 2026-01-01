@@ -19,18 +19,26 @@ pipeline {
                 }
             }
         }
-        stage('Ansible') {
-            steps {
-                echo "Target IP: ${env.TARGET_IP}"
-                sh "sleep 60" // Wait for VM to finish booting
-                dir('ansible') {
-                    ansiblePlaybook(
-                        playbook: 'configure.yml',
-                        inventory: "${env.TARGET_IP},",
-                        extraVars: [ ts_key: "${TS_KEY}" ]
-                    )
-                }
-            }
-        }
+		stage('Ansible Config') {
+				environment {
+						// This disables the SSH prompt for the entire stage
+						ANSIBLE_HOST_KEY_CHECKING = 'False'
+				}
+				steps {
+						echo "Target IP: ${env.TARGET_IP}"
+						// Give the VM a few more seconds to ensure SSH service is fully up
+						sleep 30 
+						
+						ansiblePlaybook(
+								playbook: 'ansible/configure.yml',
+								inventory: "${env.TARGET_IP},",
+								// Use single quotes for the variable name to avoid interpolation warnings
+								extraVars: [ 
+										ts_key: 'TS_KEY', 
+										ansible_user: 'user' 
+								]
+						)
+				}
+		}
     }
 }
