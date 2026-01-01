@@ -9,7 +9,7 @@ terraform {
 
 provider "proxmox" {
   endpoint  = "https://100.109.221.82:8006/"
-  api_token = var.proxmox_api_token
+  api_token = "${var.proxmox_token_id}=${var.proxmox_api_token}"
   insecure = true # Only if using a self-signed certificate
 }
 
