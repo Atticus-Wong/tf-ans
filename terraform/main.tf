@@ -13,11 +13,22 @@ provider "proxmox" {
   insecure = true # Only if using a self-signed certificate
 }
 
+
+variable "vm_name" {
+  type    = string
+  default = "debian-automated"
+}
+
+resource "random_integer" "vmid" {
+  min = 200
+  max = 999
+}
+
 resource "proxmox_virtual_environment_vm" "vms" {
-  name        = "debian-tmp-spinup"
+  name        = var.vm_name
   description = "Managed by Terraform"
   node_name   = "home-atti" 
-  vm_id       = 201
+  vm_id       = random_integer.vmid.result
 
   # This block is valid for VMs
   clone {
