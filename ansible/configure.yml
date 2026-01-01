@@ -1,0 +1,11 @@
+---
+- name: Setup Docker and Tailscale
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Docker
+      shell: curl -fsSL https://get.docker.com | sh
+    - name: Install Tailscale
+      shell: curl -fsSL https://tailscale.com/install.sh | sh
+    - name: Join Tailscale
+      command: "tailscale up --authkey={{ ts_key }}"
