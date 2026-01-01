@@ -19,26 +19,25 @@ pipeline {
                 }
             }
         }
-		stage('Ansible Config') {
-				environment {
-						// This disables the SSH prompt for the entire stage
-						ANSIBLE_HOST_KEY_CHECKING = 'False'
+				stage('Ansible') {
+						environment {
+								ANSIBLE_HOST_KEY_CHECKING = 'False'
+						}
+						steps {
+								echo "Configuring VM at ${env.TARGET_IP} using SSH Agent"
+								
+								// Use the ID you created in Step 1
+								sshagent(['AUTOMATION_SSH_KEY']) {
+										ansiblePlaybook(
+												playbook: 'ansible/configure.yml',
+												inventory: "${env.TARGET_IP},",
+												extraVars: [ 
+														ts_key: 'TS_KEY', 
+														ansible_user: 'user' 
+												]
+										)
+								}
+						}
 				}
-				steps {
-						echo "Target IP: ${env.TARGET_IP}"
-						// Give the VM a few more seconds to ensure SSH service is fully up
-						sleep 30 
-						
-						ansiblePlaybook(
-								playbook: 'ansible/configure.yml',
-								inventory: "${env.TARGET_IP},",
-								// Use single quotes for the variable name to avoid interpolation warnings
-								extraVars: [ 
-										ts_key: 'TS_KEY', 
-										ansible_user: 'user' 
-								]
-						)
-				}
-		}
     }
 }
