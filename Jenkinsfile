@@ -2,12 +2,14 @@ pipeline {
     agent { label 'docker-tf-ansible' } // Matches your Docker Cloud label
 
 		parameters {
-						string(name: 'VM_NAME', defaultValue: 'debian-tmp', description: 'What should the VM be named?')
+						string(name: 'VM_NAME', defaultValue: 'debian-automated', description: 'Name of the VM')
+						string(name: 'VM_ID', defaultValue: '', description: 'Manual VM ID (Leave blank for random)')
 				}
 
     environment {
         // IDs match what you added in Manage Jenkins > Credentials
 				TF_VAR_vm_name = "${params.VM_NAME}"
+				TF_VAR_manual_vmid = "${params.VM_ID}"
 				TF_VAR_proxmox_api_token = credentials('PVE_SECRET')
         TS_KEY    = credentials('TS_AUTHKEY')
 				PROXMOX_TOKEN_ID = "terraform-prov@pve!terraform-key"

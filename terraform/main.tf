@@ -13,6 +13,10 @@ provider "proxmox" {
   insecure = true # Only if using a self-signed certificate
 }
 
+variable "manual_vmid" {
+  type    = string
+  default = ""
+}
 
 variable "vm_name" {
   type    = string
@@ -28,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "vms" {
   name        = var.vm_name
   description = "Managed by Terraform"
   node_name   = "home-atti" 
-  vm_id       = random_integer.vmid.result
+  vm_id = var.manual_vmid != "" ? tonumber(var.manual_vmid) : random_integer.vmid.result
 
   # This block is valid for VMs
   clone {
