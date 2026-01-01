@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'tf-ansible' } // Matches your Docker Cloud label
+    agent { label 'docker-tf-ansible' } // Matches your Docker Cloud label
     environment {
         // IDs match what you added in Manage Jenkins > Credentials
         PVE_TOKEN = credentials('PVE_CONCAT')
