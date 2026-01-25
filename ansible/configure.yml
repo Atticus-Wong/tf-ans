@@ -5,7 +5,20 @@
   tasks:
     - name: Install Docker
       shell: curl -fsSL https://get.docker.com | sh
+      register: docker_install
+      # Retry for up to 5 minutes (30 * 10s)
+      until: docker_install is success
+      retries: 30
+      delay: 10
+
     - name: Install Tailscale
       shell: curl -fsSL https://tailscale.com/install.sh | sh
+      register: ts_install
+      until: ts_install is success
+      retries: 30
+      delay: 10
+
     - name: Join Tailscale
       command: "tailscale up --authkey={{ ts_key }}"
+      # Sensitive parameters shouldn't be logged in plain text
+      no_log: true
